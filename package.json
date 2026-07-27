@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.5.0",
+    "multer": "^2.1.1",
+    "node": "^24.18.0",
+    "pdf-lib": "^1.17.1",
+    "pdf-poppler": "^0.2.3",
+    "pdf-to-img": "^6.0.0",
+    "pdf2pic": "^3.2.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "tesseract.js": "^7.0.0"
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "seed": "node seeds/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "description": "\"# Mobile_Backend\"",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pattrapa/Mobile_Backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pattrapa/Mobile_Backend/issues"
+  },
+  "homepage": "https://github.com/pattrapa/Mobile_Backend#readme"
+}
