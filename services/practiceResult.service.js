@@ -16,7 +16,7 @@ const practiceResultService = {
         }
       },
       {
-        new: true,
+        returnDocument: "after",
         upsert: true
       }
     )
@@ -26,7 +26,7 @@ const practiceResultService = {
     return await PracticeResult.findByIdAndUpdate(
       id,
       { $set: data },
-      { new: true }
+      { returnDocument: "after" }
     )
   },
 

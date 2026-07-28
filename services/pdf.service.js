@@ -1,6 +1,6 @@
-import { fromPath } from "pdf2pic"
 import fs from "fs"
 import path from "path"
+import { pdf } from "pdf-to-img"
 
 const pdfService = {
   convertPdfToImages: async (pdfPath, presentationId) => {
@@ -16,41 +16,67 @@ const pdfService = {
       throw new Error(`PDF file not found: ${inputPath}`)
     }
 
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir, { recursive: true })
-    }
+    fs.mkdirSync(outputDir, { recursive: true })
 
     console.log("--- เริ่มแปลง PDF ---")
     console.log("PDF input:", inputPath)
     console.log("Output directory:", outputDir)
 
+    let document
+
     try {
-      const convert = fromPath(inputPath, {
-        density: 120,
-        saveFilename: "slide",
-        savePath: outputDir,
-        format: "jpeg",
-        width: 1280,
-        height: 960,
+      document = await pdf(inputPath, {
+        scale: 2,
       })
 
-      const results = await convert.bulk(-1, {})
+      const convertedSlides = []
+      const batchId = Date.now()
 
-      console.log("--- แปลง PDF สำเร็จ ---")
-      console.log("จำนวนหน้า:", results.length)
+      let pageNumber = 1
 
-      return results.map((result, index) => ({
-        slideNo: index + 1,
-        imagePath: result.path
+      for await (const imageBuffer of document) {
+        const fileName = `${batchId}-slide-${pageNumber}.png`
+        const outputPath = path.join(outputDir, fileName)
+
+        await fs.promises.writeFile(outputPath, imageBuffer)
+
+        const relativePath = path
+          .relative(process.cwd(), outputPath)
           .split(path.sep)
-          .join("/"),
-      }))
+          .join("/")
+
+        convertedSlides.push({
+          slideNo: pageNumber,
+          imagePath: relativePath,
+        })
+
+        console.log(`แปลงหน้าที่ ${pageNumber} สำเร็จ`)
+        pageNumber++
+      }
+
+      if (convertedSlides.length === 0) {
+        throw new Error("No pages were found in the PDF")
+      }
+
+      console.log(
+        `--- แปลง PDF สำเร็จ ${convertedSlides.length} หน้า ---`
+      )
+
+      return convertedSlides
     } catch (error) {
       console.error("PDF conversion failed:", error)
 
       throw new Error(
-        `Unable to convert PDF: ${error.message}`
+        `Unable to convert PDF: ${
+          error instanceof Error
+            ? error.message
+            : "Unknown PDF conversion error"
+        }`
       )
+    } finally {
+      if (document) {
+        await document.destroy()
+      }
     }
   },
 }

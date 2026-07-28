@@ -24,7 +24,7 @@ const userService = {
     return await User.findByIdAndUpdate(
       id,
       { $set: data },
-      { new: true }
+      { returnDocument: "after" }
     )
   },
   deleteUser: async (id) => {

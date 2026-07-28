@@ -26,7 +26,7 @@ const slideService = {
     return await Slide.findByIdAndUpdate(
       id,
       { $set: data },
-      { new: true }
+      { returnDocument: "after" }
     )
   },
 

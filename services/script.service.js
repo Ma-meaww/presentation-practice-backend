@@ -18,7 +18,7 @@ const scriptService = {
     return await Script.findByIdAndUpdate(
       id,
       { $set: data },
-      { new: true }
+      { returnDocument: "after" }
     )
   },
 

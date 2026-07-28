@@ -21,7 +21,7 @@ const presentationService = {
     return await Presentation.findByIdAndUpdate(
       id,
       { $set: data },
-      { new: true }
+      { returnDocument: "after" }
     )
   },
 
